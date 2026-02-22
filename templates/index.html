@@ -9,7 +9,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      height: 100dvh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       background: #0a0a0f;
@@ -61,17 +61,8 @@
       flex-shrink: 0;
     }
 
-    .header-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #f1f5f9;
-    }
-
-    .header-sub {
-      font-size: 0.75rem;
-      color: #475569;
-      margin-top: 1px;
-    }
+    .header-title { font-size: 0.95rem; font-weight: 600; color: #f1f5f9; }
+    .header-sub { font-size: 0.75rem; color: #475569; margin-top: 1px; }
 
     .badge {
       display: inline-flex;
@@ -89,8 +80,7 @@
     }
 
     .badge-dot {
-      width: 5px;
-      height: 5px;
+      width: 5px; height: 5px;
       border-radius: 50%;
       background: #a78bfa;
       animation: pulse 2s infinite;
@@ -112,77 +102,118 @@
       cursor: pointer;
       transition: color 0.15s, border-color 0.15s;
     }
-
     .reset-btn:hover { color: #94a3b8; border-color: rgba(255,255,255,0.15); }
 
-    /* ── Chat area ── */
-    .chat-wrap {
+    /* ── Main ── */
+    main {
       position: relative;
       z-index: 1;
       flex: 1;
-      overflow-y: auto;
-      padding: 2rem 1rem;
-      scroll-behavior: smooth;
-    }
-
-    .chat-inner {
-      max-width: 760px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    /* ── Empty state ── */
-    .empty-state {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 60vh;
-      text-align: center;
-      gap: 1rem;
+      padding: 3rem 1rem 4rem;
     }
 
-    .empty-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
+    .content { width: 100%; max-width: 760px; }
+
+    /* ── Form state ── */
+    .form-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .hero-icon {
+      width: 64px; height: 64px;
+      border-radius: 18px;
       background: linear-gradient(135deg, #6366f1, #8b5cf6);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.8rem;
     }
 
-    .empty-state h2 {
-      font-size: 1.4rem;
+    .form-state h1 {
+      font-size: 1.6rem;
       font-weight: 700;
       color: #f8fafc;
       letter-spacing: -0.02em;
     }
 
-    .empty-state h2 span {
+    .form-state h1 span {
       background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
-    .empty-state p {
+    .form-state p {
       font-size: 0.9rem;
       color: #475569;
-      max-width: 420px;
+      max-width: 480px;
       line-height: 1.6;
     }
+
+    .idea-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    textarea#idea {
+      width: 100%;
+      min-height: 140px;
+      padding: 1rem 1.1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 14px;
+      color: #e2e8f0;
+      font-size: 0.92rem;
+      font-family: inherit;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    textarea#idea::placeholder { color: #334155; }
+
+    textarea#idea:focus {
+      border-color: rgba(129,140,248,0.5);
+      box-shadow: 0 0 0 3px rgba(129,140,248,0.08);
+    }
+
+    .submit-btn {
+      align-self: flex-end;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.4rem;
+      background: linear-gradient(135deg, #6366f1, #3c3b41);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+    }
+
+    .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
     .hint-chips {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
-      justify-content: center;
-      margin-top: 0.5rem;
+      justify-content: left;
     }
 
     .hint-chip {
@@ -203,71 +234,95 @@
       background: rgba(129,140,248,0.06);
     }
 
-    /* ── Messages ── */
-    .message {
-      display: flex;
-      gap: 0.75rem;
-      align-items: flex-start;
-    }
-
-    .message.user { flex-direction: row-reverse; }
-
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
+    /* ── Loading overlay ── */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(8px);
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 1.25rem;
+    }
+
+    .loading-overlay.active { display: flex; }
+
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(99,102,241,0.2);
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text { color: #64748b; font-size: 0.88rem; }
+
+    /* ── PRD result ── */
+    .prd-result { display: flex; flex-direction: column; gap: 0; }
+
+    .prd-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .prd-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6366f1;
+      margin-bottom: 0.5rem;
+    }
+
+    .prd-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+
+    .prd-idea {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .prd-section {
+      padding: 1.75rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .prd-section:last-child { border-bottom: none; }
+
+    .section-heading {
       font-size: 0.75rem;
       font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8b5cf6;
+      margin-bottom: 0.75rem;
     }
 
-    .avatar.ai {
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      color: #fff;
-    }
-
-    .avatar.user {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #94a3b8;
-    }
-
-    .bubble {
-      max-width: 78%;
-      padding: 0.85rem 1.1rem;
-      border-radius: 16px;
-      font-size: 0.9rem;
-      line-height: 1.65;
-    }
-
-    .message.user .bubble {
-      background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.2));
-      border: 1px solid rgba(129,140,248,0.2);
-      color: #e2e8f0;
-      border-top-right-radius: 4px;
-    }
-
-    .message.ai .bubble {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      color: #cbd5e1;
-      border-top-left-radius: 4px;
-    }
-
-    /* Prose inside AI bubble */
-    .bubble h1,.bubble h2,.bubble h3 { color: #f1f5f9; font-weight: 600; margin: 1rem 0 0.4rem; }
-    .bubble h1 { font-size: 1.1rem; }
-    .bubble h2 { font-size: 1rem; }
-    .bubble h3 { font-size: 0.92rem; }
-    .bubble p { margin-bottom: 0.6rem; }
-    .bubble p:last-child { margin-bottom: 0; }
-    .bubble ul,.bubble ol { padding-left: 1.3rem; margin-bottom: 0.6rem; }
-    .bubble li { margin-bottom: 0.25rem; }
-    .bubble strong { color: #e2e8f0; }
-    .bubble code {
+    /* Prose inside sections */
+    .section-body { font-size: 0.9rem; line-height: 1.7; color: #94a3b8; }
+    .section-body h1,.section-body h2,.section-body h3 { color: #f1f5f9; font-weight: 600; margin: 1rem 0 0.4rem; }
+    .section-body h1 { font-size: 1.05rem; }
+    .section-body h2 { font-size: 0.97rem; }
+    .section-body h3 { font-size: 0.9rem; }
+    .section-body p { margin-bottom: 0.55rem; }
+    .section-body p:last-child { margin-bottom: 0; }
+    .section-body ul,.section-body ol { padding-left: 1.3rem; margin-bottom: 0.55rem; }
+    .section-body li { margin-bottom: 0.25rem; }
+    .section-body strong { color: #e2e8f0; }
+    .section-body code {
       background: rgba(255,255,255,0.08);
       border-radius: 4px;
       padding: 0.1em 0.35em;
@@ -275,122 +330,20 @@
       font-family: monospace;
       color: #c084fc;
     }
-    .bubble table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.5rem 0; }
-    .bubble th { background: rgba(255,255,255,0.05); padding: 0.4rem 0.75rem; text-align: left; color: #94a3b8; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.07); }
-    .bubble td { padding: 0.35rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .bubble tr:last-child td { border-bottom: none; }
-    .bubble blockquote { border-left: 2px solid rgba(129,140,248,0.4); padding-left: 0.75rem; color: #64748b; font-style: italic; margin: 0.5rem 0; }
-
-    /* ── Typing indicator ── */
-    .typing {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    .typing-dots {
-      display: flex;
-      gap: 4px;
-      padding: 0.75rem 1rem;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      border-top-left-radius: 4px;
-    }
-
-    .typing-dots span {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #6366f1;
-      animation: bounce 1.2s infinite;
-    }
-    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-5px); opacity: 1; }
-    }
-
-    /* ── Input bar ── */
-    .input-bar {
-      position: relative;
-      z-index: 10;
-      flex-shrink: 0;
-      padding: 1rem 1.5rem 1.25rem;
-      background: rgba(10,10,15,0.85);
-      backdrop-filter: blur(16px);
-      border-top: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .input-form {
-      max-width: 760px;
-      margin: 0 auto;
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    .input-wrap {
-      flex: 1;
-      position: relative;
-    }
-
-    textarea#message {
-      width: 100%;
-      max-height: 160px;
-      padding: 0.65rem 1rem;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 12px;
-      color: #e2e8f0;
-      font-size: 0.9rem;
-      font-family: inherit;
-      line-height: 1.5;
-      resize: none;
-      outline: none;
-      overflow-y: auto;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    textarea#message::placeholder { color: #334155; }
-
-    textarea#message:focus {
-      border-color: rgba(129,140,248,0.5);
-      box-shadow: 0 0 0 3px rgba(129,140,248,0.08);
-    }
-
-    .send-btn {
-      width: 44px;
-      height: 44px;
-      flex-shrink: 0;
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      border: none;
-      border-radius: 12px;
-      color: #fff;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.2s, transform 0.15s;
-      box-shadow: 0 4px 16px rgba(99,102,241,0.35);
-    }
-
-    .send-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .send-btn:active { transform: translateY(0); }
-    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-    .input-hint {
-      text-align: center;
-      font-size: 0.72rem;
-      color: #1e293b;
-      margin-top: 0.6rem;
-    }
+    .section-body table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.5rem 0; }
+    .section-body th { background: rgba(255,255,255,0.05); padding: 0.4rem 0.75rem; text-align: left; color: #94a3b8; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .section-body td { padding: 0.35rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: #94a3b8; }
+    .section-body tr:last-child td { border-bottom: none; }
+    .section-body blockquote { border-left: 2px solid rgba(129,140,248,0.4); padding-left: 0.75rem; color: #64748b; font-style: italic; margin: 0.5rem 0; }
   </style>
 </head>
 <body>
   <div class="bg-glow"></div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Generating your PRD…</div>
+  </div>
 
   <!-- Header -->
   <header>
@@ -398,133 +351,98 @@
       <div class="logo">P</div>
       <div>
         <div class="header-title">Product Discovery</div>
-        <div class="header-sub">AI Facilitated Interview</div>
+        <div class="header-sub">AI PRD Generator</div>
       </div>
     </div>
 
     <div class="badge">
       <span class="badge-dot"></span>
-      ArceeAI
+      Arcee AI: Trinity Large
     </div>
 
-    {% if started %}
+    {% if prd %}
     <form method="POST" action="/product-discovery/reset">
       <button type="submit" class="reset-btn">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
         </svg>
-        New session
+        New PRD
       </button>
     </form>
     {% endif %}
   </header>
 
-  <!-- Chat messages -->
-  <div class="chat-wrap" id="chatWrap">
-    <div class="chat-inner" id="chatInner">
+  <main>
+    <div class="content">
 
-      {% if not started %}
-      <div class="empty-state">
-        <div class="empty-icon">💡</div>
-        <h2>Define your <span>product vision</span></h2>
-        <p>Describe what you want to build. The AI will guide you through a structured discovery interview across 10 product categories.</p>
-        <div class="hint-chips">
-          <span class="hint-chip" onclick="fillHint('A collaboration platform where teams manage tasks and chat in one place')">Collaboration platform</span>
-          <span class="hint-chip" onclick="fillHint('A SaaS tool for freelancers to manage clients, invoices, and projects')">Freelancer SaaS</span>
-          <span class="hint-chip" onclick="fillHint('A marketplace connecting local service providers with customers in real time')">Local marketplace</span>
-          <span class="hint-chip" onclick="fillHint('An AI assistant that automates repetitive HR onboarding workflows')">HR automation</span>
+      {% if not prd %}
+      <!-- Form state -->
+      <div class="form-state">
+        <div class="hero-icon">💡</div>
+        <div>
+          <h1>Generate your <span>Master PRD</span></h1>
         </div>
+        <p>Describe your product idea and the AI will produce a complete Product Requirements Document across 10 categories — instantly.</p>
+
+        <form class="idea-form" method="POST" action="/product-discovery/" id="prdForm">
+          <textarea
+            id="idea"
+            name="idea"
+            placeholder="Describe your product idea in as much detail as you like…"
+            required
+          ></textarea>
+          <div class="hint-chips">
+            <span class="hint-chip" onclick="fillHint('A collaboration platform where teams manage tasks and chat in one place')">Collaboration platform</span>
+            <span class="hint-chip" onclick="fillHint('A SaaS tool for freelancers to manage clients, invoices, and projects')">Freelancer SaaS</span>
+            <span class="hint-chip" onclick="fillHint('A marketplace connecting local service providers with customers in real time')">Local marketplace</span>
+            <span class="hint-chip" onclick="fillHint('An AI assistant that automates repetitive HR onboarding workflows')">HR automation</span>
+          </div>
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            Generate PRD
+          </button>
+        </form>
+
+      </div>
+
+      {% else %}
+      <!-- PRD result -->
+      <div class="prd-result">
+        <div class="prd-header">
+          <div class="prd-label">Master PRD</div>
+          <div class="prd-title">{{ prd.title }}</div>
+          {% if idea %}
+          <div class="prd-idea">Based on: {{ idea }}</div>
+          {% endif %}
+        </div>
+
+        {% for section in prd.sections %}
+        <div class="prd-section">
+          <div class="section-heading">{{ section.label }}</div>
+          <div class="section-body">{{ section.content | safe }}</div>
+        </div>
+        {% endfor %}
       </div>
       {% endif %}
 
-      {% for msg in history %}
-      <div class="message {{ msg.role }}">
-        <div class="avatar {{ msg.role }}">
-          {% if msg.role == 'ai' or msg.role == 'assistant' %}AI{% else %}You{% endif %}
-        </div>
-        <div class="bubble">
-          {% if msg.role == 'assistant' %}
-            {{ msg.content | safe }}
-          {% else %}
-            {{ msg.content }}
-          {% endif %}
-        </div>
-      </div>
-      {% endfor %}
-
-      <!-- Typing indicator shown while waiting -->
-      <div class="typing" id="typingIndicator" style="display:none;">
-        <div class="avatar ai">AI</div>
-        <div class="typing-dots">
-          <span></span><span></span><span></span>
-        </div>
-      </div>
-
     </div>
-  </div>
-
-  <!-- Input bar -->
-  <div class="input-bar">
-    <form class="input-form" method="POST" action="/product-discovery/" id="chatForm">
-      <div class="input-wrap">
-        <textarea
-          id="message"
-          name="message"
-          placeholder="{% if started %}Continue the conversation...{% else %}Describe your product idea...{% endif %}"
-          rows="1"
-          autocomplete="off"
-          spellcheck="true"
-        ></textarea>
-      </div>
-      <button type="submit" class="send-btn" id="sendBtn" title="Send">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
-      </button>
-    </form>
-    <div class="input-hint">Press Enter to send &middot; Shift+Enter for new line</div>
-  </div>
+  </main>
 
   <script>
-    const textarea = document.getElementById('message');
-    const form = document.getElementById('chatForm');
-    const sendBtn = document.getElementById('sendBtn');
-    const typingIndicator = document.getElementById('typingIndicator');
-    const chatWrap = document.getElementById('chatWrap');
-
-    // Auto-resize textarea
-    function resize() {
-      textarea.style.height = 'auto';
-      textarea.style.height = Math.min(textarea.scrollHeight, 160) + 'px';
-    }
-    textarea.addEventListener('input', resize);
-
-    // Submit on Enter (not Shift+Enter)
-    textarea.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        if (textarea.value.trim()) form.requestSubmit();
-      }
-    });
-
-    // Show typing indicator on submit
-    form.addEventListener('submit', function(e) {
-      if (!textarea.value.trim()) { e.preventDefault(); return; }
-      sendBtn.disabled = true;
-      typingIndicator.style.display = 'flex';
-      chatWrap.scrollTop = chatWrap.scrollHeight;
-    });
-
-    // Fill hint chips
     function fillHint(text) {
-      textarea.value = text;
-      textarea.focus();
-      resize();
+      document.getElementById('idea').value = text;
+      document.getElementById('idea').focus();
     }
 
-    // Scroll to bottom on load
-    chatWrap.scrollTop = chatWrap.scrollHeight;
-    textarea.focus();
+    const form = document.getElementById('prdForm');
+    if (form) {
+      form.addEventListener('submit', function() {
+        document.getElementById('loadingOverlay').classList.add('active');
+        document.getElementById('submitBtn').disabled = true;
+      });
+    }
   </script>
 </body>
 </html>

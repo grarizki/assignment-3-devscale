@@ -1,94 +1,79 @@
-import uuid
 import markdown
-from fastapi import APIRouter, Request, Form, Response
+from fastapi import APIRouter, Request, Form
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
 from .prompt import SYSTEM_PROMPT
 from app.utils.openai import client
 
 template = Jinja2Templates("templates")
 stories_router = APIRouter(prefix="/product-discovery")
 
-# In-memory session store: { session_id: [ {role, content}, ... ] }
-sessions: dict[str, list[dict]] = {}
-
-COOKIE_NAME = "pd_session"
 MODEL = "arcee-ai/trinity-large-preview:free"
 
 
-def get_or_create_session(session_id: str | None) -> tuple[str, list[dict]]:
-    if session_id and session_id in sessions:
-        return session_id, sessions[session_id]
-    new_id = str(uuid.uuid4())
-    sessions[new_id] = []
-    return new_id, sessions[new_id]
+class MasterPRD(BaseModel):
+    title: str
+    problem: str
+    audience: str
+    features: str
+    user_journey: str
+    business_model: str
+    competitive_landscape: str
+    design_language: str
+    technical_constraints: str
+    success_metrics: str
+    risks: str
+
+
+SECTION_LABELS = {
+    "problem": "Problem & Value Proposition",
+    "audience": "Target Audience",
+    "features": "Core Features (MVP)",
+    "user_journey": "User Journey & UX",
+    "business_model": "Business Model",
+    "competitive_landscape": "Competitive Landscape",
+    "design_language": "Design Language",
+    "technical_constraints": "Technical Constraints",
+    "success_metrics": "Success Metrics",
+    "risks": "Risks & Assumptions",
+}
 
 
 @stories_router.get("/")
-def get_chat(request: Request, response: Response):
-    session_id = request.cookies.get(COOKIE_NAME)
-    session_id, history = get_or_create_session(session_id)
-    resp = template.TemplateResponse("index.html", {
-        "request": request,
-        "history": history,
-        "started": len(history) > 0,
-    })
-    resp.set_cookie(COOKIE_NAME, session_id, httponly=True, samesite="lax")
-    return resp
+def get_form(request: Request):
+    return template.TemplateResponse("index.html", {"request": request, "prd": None})
 
 
 @stories_router.post("/")
-def send_message(request: Request, response: Response, message: str = Form("")):
-    session_id = request.cookies.get(COOKIE_NAME)
-    session_id, history = get_or_create_session(session_id)
-
-    if not message.strip():
-        resp = template.TemplateResponse("index.html", {
-            "request": request,
-            "history": history,
-            "started": len(history) > 0,
-        })
-        resp.set_cookie(COOKIE_NAME, session_id, httponly=True, samesite="lax")
-        return resp
-
-    history.append({"role": "user", "content": message.strip()})
-
-    completion = client.chat.completions.create(
+def generate_prd(request: Request, idea: str = Form(...)):
+    completion = client.beta.chat.completions.parse(
         model=MODEL,
-        messages=[{"role": "system", "content": SYSTEM_PROMPT}] + history,  # type: ignore[arg-type]
-        extra_body={"reasoning": {"enabled": True}},
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": idea.strip()},
+        ],
+        response_format=MasterPRD,
     )
 
-    ai_text = completion.choices[0].message.content or ""
-    history.append({"role": "assistant", "content": ai_text})
+    prd = completion.choices[0].message.parsed
+    if prd is None:
+        raise ValueError("Failed to parse PRD response")
 
-    # Convert assistant markdown to HTML for rendering
-    rendered = [
+    sections = [
         {
-            "role": msg["role"],
-            "content": markdown.markdown(msg["content"]) if msg["role"] == "assistant" else msg["content"],
-            "raw": msg["content"],
+            "label": SECTION_LABELS[field],
+            "content": markdown.markdown(getattr(prd, field)),
         }
-        for msg in history
+        for field in SECTION_LABELS
     ]
 
-    resp = template.TemplateResponse("index.html", {
+    return template.TemplateResponse("index.html", {
         "request": request,
-        "history": rendered,
-        "started": True,
+        "prd": {"title": prd.title, "sections": sections},
+        "idea": idea.strip(),
     })
-    resp.set_cookie(COOKIE_NAME, session_id, httponly=True, samesite="lax")
-    return resp
 
 
 @stories_router.post("/reset")
-def reset_session(request: Request, response: Response):
-    session_id = request.cookies.get(COOKIE_NAME)
-    if session_id and session_id in sessions:
-        sessions.pop(session_id)
-    resp = template.TemplateResponse("index.html", {
-        "request": request,
-        "history": [],
-        "started": False,
-    })
-    resp.delete_cookie(COOKIE_NAME)
-    return resp
+def reset(request: Request):
+    return template.TemplateResponse("index.html", {"request": request, "prd": None})

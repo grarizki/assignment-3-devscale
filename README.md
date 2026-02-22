@@ -17,7 +17,9 @@ An AI-facilitated product discovery interview app. Describe your product idea an
 - **OpenRouter** — LLM API gateway (model: `arcee-ai/trinity-large-preview`)
 - **uv** — package manager
 
-<img width="1800" height="1090" alt="2026-02-22_22-37-05" src="https://github.com/user-attachments/assets/2d7543e7-c9f5-4186-af2f-116b9dbda2a6" />
+![ai-prd-text-generator](image-2.png)
+
+![product-discovery](image.png)
 
 ## Setup
 
